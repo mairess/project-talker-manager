@@ -41,8 +41,9 @@ app.post('/talker', async (req, res) => {
 });
 
 app.put('/talker/:id', talkerValidation, async (req, res) => {
-  const theTalker = await fileManipulation.updateTalker();
-  res.status(201).json(theTalker);
+  const { id } = req.params;
+  const updatedTalker = await fileManipulation.updateTalker(String(id), req.body);
+  res.status(200).json(updatedTalker);
 });
 
 module.exports = app;

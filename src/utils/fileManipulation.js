@@ -1,5 +1,6 @@
 const fs = require('fs').promises;
 const path = require('path');
+// const findTheTalker = require('./findTheTalker');
 
 const filePath = path.resolve(__dirname, '..', 'talker.json');
 
@@ -23,10 +24,13 @@ async function addNewTalker(talker) {
   return newTalker;
 }
 
-async function updateTalker(id) {
+async function updateTalker(id, newTalkerData) {
   const theTalkers = await getAllTalkers();
-  const theTalker = theTalkers.find((t) => t.id === id);
-  return theTalker;
+  const index = theTalkers.findIndex((talker) => talker.id === Number(id));
+  const updatedTalker = { id: Number(id), ...newTalkerData };
+  theTalkers.splice(index, 1, updatedTalker);
+  await fs.writeFile(filePath, JSON.stringify(theTalkers, null, 2));
+  return updatedTalker;
 }
 
 module.exports = {
