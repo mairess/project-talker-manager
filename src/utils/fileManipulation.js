@@ -1,9 +1,10 @@
 const fs = require('fs').promises;
 const path = require('path');
 
+const filePath = path.resolve(__dirname, '..', 'talker.json');
+
 async function getAllTalkers() {
   try {
-    const filePath = path.resolve(__dirname, '..', 'talker.json');
     const data = await fs.readFile(filePath, 'utf-8');
     const parsed = JSON.parse(data);
     return parsed;
@@ -12,6 +13,14 @@ async function getAllTalkers() {
   }
 }
 
+async function addNewTalker(talker) {
+  const theTalkers = await getAllTalkers();
+  theTalkers.push(talker);
+  const updatedTalkers = await fs.writeFile(filePath, JSON.stringify(theTalkers, null, 2));
+  return updatedTalkers;
+}
+
 module.exports = {
   getAllTalkers,
+  addNewTalker,
 };

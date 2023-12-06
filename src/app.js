@@ -1,5 +1,5 @@
 const express = require('express');
-const readTheFile = require('./utils/readTheFile');
+const readTheFile = require('./utils/fileManipulation');
 const loginRouter = require('./routes/loginRouter');
 const { auth } = require('./middlewares/auth');
 const { nameValidation, ageValidation,
@@ -28,8 +28,10 @@ app.get('/talker/:id', async (req, res) => {
 
 app.post('/talker', auth, nameValidation, ageValidation, talkValidation, async (req, res) => {
   const newTalker = req.body;
-  // const theTalkers = await readTheFile.getAllTalkers();
-  res.status(201).json(newTalker);
+  await readTheFile.addNewTalker(newTalker);
+  const theTalkers = await readTheFile.getAllTalkers();
+
+  res.status(201).json(theTalkers);
 });
 
 module.exports = app;
