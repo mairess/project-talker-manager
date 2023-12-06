@@ -15,9 +15,12 @@ async function getAllTalkers() {
 
 async function addNewTalker(talker) {
   const theTalkers = await getAllTalkers();
-  theTalkers.push(talker);
-  const updatedTalkers = await fs.writeFile(filePath, JSON.stringify(theTalkers, null, 2));
-  return updatedTalkers;
+  let newId = 0;
+  theTalkers.forEach((t) => { newId = Math.max(newId, t.id) + 1; });
+  const newTalker = { id: newId, ...talker };
+  theTalkers.push(newTalker);
+  await fs.writeFile(filePath, JSON.stringify(theTalkers, null, 2));
+  return newTalker;
 }
 
 module.exports = {

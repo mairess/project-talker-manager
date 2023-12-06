@@ -28,10 +28,10 @@ app.get('/talker/:id', async (req, res) => {
 
 app.post('/talker', auth, nameValidation, ageValidation, talkValidation, async (req, res) => {
   const newTalker = req.body;
-  await readTheFile.addNewTalker(newTalker);
-  const theTalkers = await readTheFile.getAllTalkers();
+  const addedTalker = await readTheFile.addNewTalker(newTalker);
+  await readTheFile.getAllTalkers();
 
-  res.status(201).json(theTalkers);
+  res.status(201).json(addedTalker);
 });
 
 module.exports = app;
