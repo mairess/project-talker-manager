@@ -1,11 +1,11 @@
 const express = require('express');
 const readTheFile = require('./utils/readTheFile');
-const generateToken = require('./utils/generateToken');
-const validationFields = require('./middlewares/validationFields');
+const loginRouter = require('./routes/loginRouter');
 
 const app = express();
 
 app.use(express.json());
+app.use('/login', loginRouter);
 
 app.get('/talker', async (req, res) => {
   const theTalkers = await readTheFile.getAllTalkers();
@@ -21,11 +21,6 @@ app.get('/talker/:id', async (req, res) => {
   if (theTalker) return res.status(200).json(theTalker);
   
   return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-});
-
-app.post('/login', validationFields, async (req, res) => {
-  const token = generateToken();
-  res.status(200).json({ token });
 });
 
 module.exports = app;
