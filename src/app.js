@@ -28,6 +28,13 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 app.use(auth);
+
+app.delete('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+  await fileManipulation.deleteTalker(Number(id));
+  res.status(204).send();
+});
+
 app.use(nameValidation);
 app.use(ageValidation);
 app.use(talkValidation);
@@ -40,7 +47,7 @@ app.post('/talker', async (req, res) => {
   res.status(201).json(addedTalker);
 });
 
-app.put('/talker/:id', talkerValidation, async (req, res) => {
+app.put('/talker/:id', talkerValidation, nameValidation, ageValidation, async (req, res) => {
   const { id } = req.params;
   const updatedTalker = await fileManipulation.updateTalker(String(id), req.body);
   res.status(200).json(updatedTalker);
