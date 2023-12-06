@@ -1,7 +1,7 @@
 const express = require('express');
 const readTheFile = require('./utils/readTheFile');
-const { validateFields } = require('./middlewares/validateFields');
 const generateToken = require('./utils/generateToken');
+const validationFields = require('./middlewares/validationFields');
 
 const app = express();
 
@@ -23,7 +23,7 @@ app.get('/talker/:id', async (req, res) => {
   return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 });
 
-app.post('/login', validateFields, async (req, res) => {
+app.post('/login', validationFields, async (req, res) => {
   const token = generateToken();
   res.status(200).json({ token });
 });
