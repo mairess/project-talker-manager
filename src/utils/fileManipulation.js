@@ -23,7 +23,14 @@ async function addNewTalker(talker) {
   return newTalker;
 }
 
+async function updateTalker(id) {
+  const theTalkers = await getAllTalkers();
+  const theTalker = theTalkers.find((t) => t.id === id);
+  return theTalker;
+}
+
 module.exports = {
   getAllTalkers,
   addNewTalker,
+  updateTalker,
 };
