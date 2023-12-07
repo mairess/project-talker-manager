@@ -8,7 +8,7 @@ const byName = async (theTalkers, queryName) => {
 };
 
 const byRate = async (theTalkers, queryRate) => {
-  const reults = theTalkers.filter((talker) => talker.talk.rate === queryRate);
+  const reults = theTalkers.filter((talker) => talker.talk.rate === Number(queryRate));
   console.log(reults.length <= 0);
   if (reults.length === 0) {
     return [];

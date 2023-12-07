@@ -6,16 +6,25 @@ const { nameValidation, ageValidation,
   talkValidation } = require('./middlewares/validation');
 const talkerValidation = require('./middlewares/talkerValidation');
 const searchTalker = require('./utils/searchTalker');
+const queryParamsValidation = require('./middlewares/queryParamsValidation');
 
 const app = express();
 
 app.use(express.json());
 app.use('/login', loginRouter);
 
-app.get('/talker/search', auth, async (req, res) => {
-  const { q } = req.query;
+// app.get('/talker/search', auth, async (req, res) => {
+//   const { q } = req.query;
+//   const theTalkers = await fileManipulation.getAllTalkers();
+//   const foundedResults = await searchTalker.byName(theTalkers, q);
+  
+//   res.status(200).json(foundedResults);
+// });
+
+app.get('/talker/search', queryParamsValidation, auth, async (req, res) => {
+  const { rate } = req.query;
   const theTalkers = await fileManipulation.getAllTalkers();
-  const foundedResults = await searchTalker(theTalkers, q);
+  const foundedResults = await searchTalker.byRate(theTalkers, rate);
   
   res.status(200).json(foundedResults);
 });
