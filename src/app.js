@@ -2,12 +2,19 @@ const express = require('express');
 const fileManipulation = require('./utils/fileManipulation');
 const loginRouter = require('./routes/loginRouter');
 const { auth } = require('./middlewares/auth');
-const { nameValidation, ageValidation,
-  talkValidation } = require('./middlewares/validation');
 const talkerValidation = require('./middlewares/talkerValidation');
-const searchTalker = require('./utils/searchTalker');
 const queryParamsValidation = require('./middlewares/queryParamsValidation');
-const rateAndSearchTermValidation = require('./middlewares/rateAndSearchTermValidation');
+const {
+  nameValidation,
+  ageValidation,
+  talkValidation,
+} = require('./middlewares/validation');
+const {
+  notExisting,
+  rateAndQExisting,
+  onlyQExisting,
+  onlyRateExisting,
+} = require('./middlewares/rateAndSearchTermValidation');
 
 const app = express();
 
@@ -16,21 +23,11 @@ app.use('/login', loginRouter);
 
 app.get('/talker/search',
   queryParamsValidation,
-  rateAndSearchTermValidation.notExisting,
-  rateAndSearchTermValidation.rateAndQExisting,
+  notExisting,
+  rateAndQExisting,
   auth,
-  rateAndSearchTermValidation.onlyQExisting,
-  async (req, res) => {
-    const { rate } = req.query;
-    const theTalkers = await fileManipulation.getAllTalkers();
-
-    if (rate) {
-      const foundedResults = await searchTalker.byRate(theTalkers, rate);
-      return res.status(200).json(foundedResults);
-    }
-
-    return res.status(400).json({ message: 'Parâmetro de consulta inválido' });
-  });
+  onlyQExisting,
+  onlyRateExisting);
 
 app.get('/talker', async (req, res) => {
   const theTalkers = await fileManipulation.getAllTalkers();

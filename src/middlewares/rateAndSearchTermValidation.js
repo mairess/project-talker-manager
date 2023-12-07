@@ -36,9 +36,22 @@ const onlyQExisting = async (req, res, next) => {
 
   next();
 };
+
+const onlyRateExisting = async (req, res, next) => {
+  const { rate } = req.query;
+  const theTalkers = await fileManipulation.getAllTalkers();
+
+  if (rate) {
+    const foundedResults = await searchTalker.byRate(theTalkers, rate);
+    return res.status(200).json(foundedResults);
+  }
+
+  next();
+};
   
 module.exports = {
   notExisting,
   rateAndQExisting,
   onlyQExisting,
+  onlyRateExisting,
 };
