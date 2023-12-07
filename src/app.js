@@ -16,6 +16,11 @@ app.use('/login', loginRouter);
 app.get('/talker/search', queryParamsValidation, auth, async (req, res) => {
   const { q, rate } = req.query;
   const theTalkers = await fileManipulation.getAllTalkers();
+
+  if (!q && !rate) {
+    return res.status(200).json(theTalkers);
+  }
+
   if (q && rate) {
     const resultsByName = await searchTalker.byName(theTalkers, q);
     const resultsByrate = await searchTalker.byRate(theTalkers, rate);
@@ -30,6 +35,7 @@ app.get('/talker/search', queryParamsValidation, auth, async (req, res) => {
     const foundedResults = await searchTalker.byRate(theTalkers, rate);
     return res.status(200).json(foundedResults);
   }
+
   return res.status(400).json({ message: 'Parâmetro de consulta inválido' });
 });
 

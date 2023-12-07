@@ -9,7 +9,6 @@ const queryParamsValidation = (req, res, next) => {
       });
     }
   }
-  console.log('queryParamsValidation passed');
   next();
 };
 
