@@ -13,20 +13,24 @@ const app = express();
 app.use(express.json());
 app.use('/login', loginRouter);
 
-// app.get('/talker/search', auth, async (req, res) => {
-//   const { q } = req.query;
-//   const theTalkers = await fileManipulation.getAllTalkers();
-//   const foundedResults = await searchTalker.byName(theTalkers, q);
-  
-//   res.status(200).json(foundedResults);
-// });
-
 app.get('/talker/search', queryParamsValidation, auth, async (req, res) => {
-  const { rate } = req.query;
+  const { q, rate } = req.query;
   const theTalkers = await fileManipulation.getAllTalkers();
-  const foundedResults = await searchTalker.byRate(theTalkers, rate);
-  
-  res.status(200).json(foundedResults);
+  if (q && rate) {
+    const resultsByName = await searchTalker.byName(theTalkers, q);
+    const resultsByrate = await searchTalker.byRate(theTalkers, rate);
+    const foundResults = resultsByName.filter((result) => resultsByrate.includes(result));
+    return res.status(200).json(foundResults);
+  }
+  if (q) {
+    const foundedResults = await searchTalker.byName(theTalkers, q);
+    return res.status(200).json(foundedResults);
+  }
+  if (rate) {
+    const foundedResults = await searchTalker.byRate(theTalkers, rate);
+    return res.status(200).json(foundedResults);
+  }
+  return res.status(400).json({ message: 'Parâmetro de consulta inválido' });
 });
 
 app.get('/talker', async (req, res) => {

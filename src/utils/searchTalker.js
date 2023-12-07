@@ -1,6 +1,5 @@
 const byName = async (theTalkers, queryName) => {
   const reults = theTalkers.filter((talker) => talker.name.includes(queryName));
-  console.log(reults.length <= 0);
   if (reults.length === 0) {
     return [];
   }
@@ -8,8 +7,8 @@ const byName = async (theTalkers, queryName) => {
 };
 
 const byRate = async (theTalkers, queryRate) => {
+  console.log('byRate function is running');
   const reults = theTalkers.filter((talker) => talker.talk.rate === Number(queryRate));
-  console.log(reults.length <= 0);
   if (reults.length === 0) {
     return [];
   }
