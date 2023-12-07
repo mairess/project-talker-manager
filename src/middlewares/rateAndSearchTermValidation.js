@@ -11,7 +11,7 @@ const notExisting = async (req, res, next) => {
   next();
 };
 
-const existing = async (req, res, next) => {
+const rateAndQExisting = async (req, res, next) => {
   const { q, rate } = req.query;
   const theTalkers = await fileManipulation.getAllTalkers();
 
@@ -24,8 +24,21 @@ const existing = async (req, res, next) => {
 
   next();
 };
+
+const onlyQExisting = async (req, res, next) => {
+  const { q } = req.query;
+  const theTalkers = await fileManipulation.getAllTalkers();
+
+  if (q) {
+    const foundedResults = await searchTalker.byName(theTalkers, q);
+    return res.status(200).json(foundedResults);
+  }
+
+  next();
+};
   
 module.exports = {
   notExisting,
-  existing,
+  rateAndQExisting,
+  onlyQExisting,
 };

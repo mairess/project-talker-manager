@@ -17,16 +17,13 @@ app.use('/login', loginRouter);
 app.get('/talker/search',
   queryParamsValidation,
   rateAndSearchTermValidation.notExisting,
-  rateAndSearchTermValidation.existing,
+  rateAndSearchTermValidation.rateAndQExisting,
   auth,
+  rateAndSearchTermValidation.onlyQExisting,
   async (req, res) => {
-    const { q, rate } = req.query;
+    const { rate } = req.query;
     const theTalkers = await fileManipulation.getAllTalkers();
 
-    if (q) {
-      const foundedResults = await searchTalker.byName(theTalkers, q);
-      return res.status(200).json(foundedResults);
-    }
     if (rate) {
       const foundedResults = await searchTalker.byRate(theTalkers, rate);
       return res.status(200).json(foundedResults);
