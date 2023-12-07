@@ -23,12 +23,6 @@ app.get('/talker/search',
     const { q, rate } = req.query;
     const theTalkers = await fileManipulation.getAllTalkers();
 
-    if (q && rate) {
-      const resultsByName = await searchTalker.byName(theTalkers, q);
-      const resultsByrate = await searchTalker.byRate(theTalkers, rate);
-      const foundResults = resultsByName.filter((result) => resultsByrate.includes(result));
-      return res.status(200).json(foundResults);
-    }
     if (q) {
       const foundedResults = await searchTalker.byName(theTalkers, q);
       return res.status(200).json(foundedResults);
