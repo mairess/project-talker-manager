@@ -3,18 +3,18 @@ const fileManipulation = require('./utils/fileManipulation');
 const loginRouter = require('./routes/loginRouter');
 const { auth } = require('./middlewares/auth');
 const talkerValidation = require('./middlewares/talkerValidation');
-const queryParamsValidation = require('./middlewares/queryParamsValidation');
 const {
   nameValidation,
   ageValidation,
   talkValidation,
 } = require('./middlewares/validation');
 const {
+  notStandarRate,
   notExisting,
   rateAndQExisting,
   onlyQExisting,
   onlyRateExisting,
-} = require('./middlewares/rateAndSearchTermValidation');
+} = require('./middlewares/queryParamsValidation.js');
 
 const app = express();
 
@@ -22,7 +22,7 @@ app.use(express.json());
 app.use('/login', loginRouter);
 
 app.get('/talker/search',
-  queryParamsValidation,
+  notStandarRate,
   notExisting,
   rateAndQExisting,
   auth,
