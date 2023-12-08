@@ -11,21 +11,31 @@ const notExistingParams = async (req, res, next) => {
   next();
 };
 
-const rateAndQAndDateExisting = async (req, res, next) => {
-  const { q, rate, date } = req.query;
+const rateAndQExisting = async (req, res, next) => {
+  const { q, rate } = req.query;
   const theTalkers = await fileManipulation.getAllTalkers();
 
   if (q && rate) {
     const resultsByName = await searchTalker.byName(theTalkers, q);
     const resultsByRate = await searchTalker.byRate(theTalkers, rate);
 
-    let resultsByDate = [];
-    if (date) {
-      resultsByDate = await searchTalker.byDate(theTalkers, date);
-    }
     const resultsFound = resultsByName
-      .filter((result) => resultsByRate.includes(result))
-      .filter((result) => (date ? resultsByDate.includes(result) : true));
+      .filter((result) => resultsByRate.includes(result));
+    return res.status(200).json(resultsFound);
+  }
+
+  next();
+};
+
+const dateAndQExisting = async (req, res, next) => {
+  const { q, date } = req.query;
+  const theTalkers = await fileManipulation.getAllTalkers();
+
+  if (q && date) {
+    const resultsByName = await searchTalker.byName(theTalkers, q);
+
+    const resultsFound = resultsByName
+      .filter((result) => result.talk.watchedAt === date);
     return res.status(200).json(resultsFound);
   }
 
@@ -96,10 +106,12 @@ const notStandardDate = (req, res, next) => {
   
 module.exports = {
   notExistingParams,
-  rateAndQAndDateExisting,
+  rateAndQExisting,
   onlyQExisting,
   onlyRateExisting,
   onlyDateExisting,
   notStandardRate,
   notStandardDate,
+  dateAndQExisting,
+  
 };

@@ -12,10 +12,11 @@ const {
   notStandardDate,
   notStandardRate,
   notExistingParams,
-  rateAndQAndDateExisting,
+  rateAndQExisting,
   onlyQExisting,
   onlyRateExisting,
   onlyDateExisting,
+  dateAndQExisting,
 } = require('./middlewares/queryParamsValidation');
 
 const app = express();
@@ -26,7 +27,8 @@ app.use('/login', loginRouter);
 app.get('/talker/search',
   notExistingParams,
   notStandardRate,
-  rateAndQAndDateExisting,
+  rateAndQExisting,
+  dateAndQExisting,
   auth,
   onlyQExisting,
   onlyRateExisting,
