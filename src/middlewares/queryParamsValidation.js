@@ -17,10 +17,9 @@ const rateAndQExisting = async (req, res, next) => {
 
   if (q && rate) {
     const resultsByName = await searchTalker.byName(theTalkers, q);
-    const resultsByRate = await searchTalker.byRate(theTalkers, rate);
 
     const resultsFound = resultsByName
-      .filter((result) => resultsByRate.includes(result));
+      .filter((result) => result.talk.rate === Number(rate));
     return res.status(200).json(resultsFound);
   }
 
@@ -32,10 +31,28 @@ const dateAndQExisting = async (req, res, next) => {
   const theTalkers = await fileManipulation.getAllTalkers();
 
   if (q && date) {
-    const resultsByName = await searchTalker.byName(theTalkers, q);
+    const dateFormat = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
+    if (!dateFormat.test(date)) {
+      return res.status(400)
+        .json({ message: 'O parâmetro "date" deve ter o formato "dd/mm/aaaa"' });
+    }
+    const resultsByDate = theTalkers.filter((result) => result.talk.watchedAt === date);
+    const resultsByName = await searchTalker.byName(resultsByDate, q);
+    return res.status(200).json(resultsByName);
+  }
 
-    const resultsFound = resultsByName
-      .filter((result) => result.talk.watchedAt === date);
+  next();
+};
+
+const dateAndRateExisting = async (req, res, next) => {
+  const { date, rate } = req.query;
+  const theTalkers = await fileManipulation.getAllTalkers();
+
+  if (rate && date) {
+    const resultsByDate = await searchTalker.byDate(theTalkers, date);
+
+    const resultsFound = resultsByDate
+      .filter((result) => result.talk.rate === Number(rate));
     return res.status(200).json(resultsFound);
   }
 
@@ -113,5 +130,5 @@ module.exports = {
   notStandardRate,
   notStandardDate,
   dateAndQExisting,
-  
+  dateAndRateExisting,
 };
