@@ -49,6 +49,18 @@ const onlyRateExisting = async (req, res, next) => {
   next();
 };
 
+const onlyDateExisting = async (req, res, next) => {
+  const { date } = req.query;
+  const theTalkers = await fileManipulation.getAllTalkers();
+
+  if (date) {
+    const resultsFound = await searchTalker.byDate(theTalkers, date);
+    return res.status(200).json(resultsFound);
+  }
+
+  next();
+};
+
 const notStandardRate = (req, res, next) => {
   const { rate } = req.query;
 
@@ -70,4 +82,5 @@ module.exports = {
   onlyQExisting,
   onlyRateExisting,
   notStandardRate,
+  onlyDateExisting,
 };

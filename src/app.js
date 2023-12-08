@@ -14,6 +14,7 @@ const {
   rateAndQExisting,
   onlyQExisting,
   onlyRateExisting,
+  onlyDateExisting,
 } = require('./middlewares/queryParamsValidation.js');
 
 const app = express();
@@ -27,7 +28,8 @@ app.get('/talker/search',
   rateAndQExisting,
   auth,
   onlyQExisting,
-  onlyRateExisting);
+  onlyRateExisting,
+  onlyDateExisting);
 
 app.get('/talker', async (req, res) => {
   const theTalkers = await fileManipulation.getAllTalkers();
