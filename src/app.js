@@ -1,4 +1,5 @@
 const express = require('express');
+const talkersDB = require('./db/talkersDB');
 const fileManipulation = require('./utils/fileManipulation');
 const loginRouter = require('./routes/loginRouter');
 const { auth } = require('./middlewares/auth');
@@ -21,6 +22,7 @@ const {
 } = require('./middlewares/queryParamsValidation');
 const dateAndQAdnDateExisting = require('./middlewares/dateAndQAdnDateExisting');
 const rateFromBodyValidation = require('./middlewares/rateFromBodyValidation');
+const dataBaseValidation = require('./middlewares/dataBaseValidation');
 
 const app = express();
 
@@ -46,11 +48,10 @@ app.get('/talker', async (req, res) => {
   return res.status(200).json([]);
 });
 
-// app.get('/talker/db', async (req, res) => {
-//   const theTalkers = await fileManipulation.getAllTalkers();
-//   if (theTalkers.length) return res.status(200).json(theTalkers);
-//   return res.status(200).json([]);
-// });
+app.get('/talker/db', dataBaseValidation, async (req, res) => {
+  const [result] = await talkersDB.allTalkers();
+  return res.status(200).json(result);
+});
 
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
