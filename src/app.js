@@ -9,7 +9,7 @@ const {
   talkValidation,
 } = require('./middlewares/validation');
 const {
-  notStandarRate,
+  notStandardRate,
   notExisting,
   rateAndQExisting,
   onlyQExisting,
@@ -22,7 +22,7 @@ app.use(express.json());
 app.use('/login', loginRouter);
 
 app.get('/talker/search',
-  notStandarRate,
+  notStandardRate,
   notExisting,
   rateAndQExisting,
   auth,
