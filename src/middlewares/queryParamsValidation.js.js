@@ -1,11 +1,11 @@
 const fileManipulation = require('../utils/fileManipulation');
 const searchTalker = require('../utils/searchTalker');
 
-const notExisting = async (req, res, next) => {
-  const { q, rate } = req.query;
+const notExistingParams = async (req, res, next) => {
+  const { q, rate, date } = req.query;
   const theTalkers = await fileManipulation.getAllTalkers();
   
-  if (!q && !rate) {
+  if (!q && !rate && !date) {
     return res.status(200).json(theTalkers);
   }
   next();
@@ -65,7 +65,7 @@ const notStandardRate = (req, res, next) => {
 };
   
 module.exports = {
-  notExisting,
+  notExistingParams,
   rateAndQExisting,
   onlyQExisting,
   onlyRateExisting,

@@ -10,7 +10,7 @@ const {
 } = require('./middlewares/validation');
 const {
   notStandardRate,
-  notExisting,
+  notExistingParams,
   rateAndQExisting,
   onlyQExisting,
   onlyRateExisting,
@@ -23,7 +23,7 @@ app.use('/login', loginRouter);
 
 app.get('/talker/search',
   notStandardRate,
-  notExisting,
+  notExistingParams,
   rateAndQExisting,
   auth,
   onlyQExisting,
