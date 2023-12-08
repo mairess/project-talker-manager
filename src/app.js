@@ -20,6 +20,7 @@ const {
   dateAndRateExisting,
 } = require('./middlewares/queryParamsValidation');
 const dateAndQAdnDateExisting = require('./middlewares/dateAndQAdnDateExisting');
+const rateFromBodyValidation = require('./middlewares/rateFromBodyValidation');
 
 const app = express();
 
@@ -78,7 +79,7 @@ app.delete('/talker/:id', async (req, res) => {
   res.status(204).send();
 });
 
-app.patch('/talker/rate/:id', async (req, res) => {
+app.patch('/talker/rate/:id', rateFromBodyValidation, async (req, res) => {
   const { id } = req.params;
   const { rate } = req.body;
   console.log(rate);
