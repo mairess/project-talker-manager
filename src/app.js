@@ -9,6 +9,7 @@ const {
   talkValidation,
 } = require('./middlewares/validation');
 const {
+  notStandardDate,
   notStandardRate,
   notExistingParams,
   rateAndQExisting,
@@ -29,7 +30,8 @@ app.get('/talker/search',
   auth,
   onlyQExisting,
   onlyRateExisting,
-  onlyDateExisting);
+  onlyDateExisting,
+  notStandardDate);
 
 app.get('/talker', async (req, res) => {
   const theTalkers = await fileManipulation.getAllTalkers();

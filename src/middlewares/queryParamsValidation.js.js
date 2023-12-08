@@ -75,12 +75,27 @@ const notStandardRate = (req, res, next) => {
   
   next();
 };
+
+const notStandardDate = (req, res, next) => {
+  const { date } = req.query;
+  const dateFormat = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
+
+  if (!dateFormat.test(date)) {
+    return res.status(400).json({
+      message: 'O campo createdAt deve ter o formato \'dd/mm/aaaa\'',
+    });
+  }
+  next();
+  
+  next();
+};
   
 module.exports = {
   notExistingParams,
   rateAndQExisting,
   onlyQExisting,
   onlyRateExisting,
-  notStandardRate,
   onlyDateExisting,
+  notStandardRate,
+  notStandardDate,
 };
