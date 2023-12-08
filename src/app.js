@@ -16,7 +16,7 @@ const {
   onlyQExisting,
   onlyRateExisting,
   onlyDateExisting,
-} = require('./middlewares/queryParamsValidation.js');
+} = require('./middlewares/queryParamsValidation');
 
 const app = express();
 
@@ -24,14 +24,14 @@ app.use(express.json());
 app.use('/login', loginRouter);
 
 app.get('/talker/search',
-  notStandardRate,
   notExistingParams,
+  notStandardRate,
   rateAndQExisting,
   auth,
   onlyQExisting,
   onlyRateExisting,
-  onlyDateExisting,
-  notStandardDate);
+  notStandardDate,
+  onlyDateExisting);
 
 app.get('/talker', async (req, res) => {
   const theTalkers = await fileManipulation.getAllTalkers();
