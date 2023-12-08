@@ -85,7 +85,6 @@ const notStandardDate = (req, res, next) => {
       message: 'O campo createdAt deve ter o formato \'dd/mm/aaaa\'',
     });
   }
-  next();
   
   next();
 };
