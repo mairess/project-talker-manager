@@ -78,4 +78,12 @@ app.delete('/talker/:id', async (req, res) => {
   res.status(204).send();
 });
 
+app.patch('/talker/rate/:id', async (req, res) => {
+  const { id } = req.params;
+  const { rate } = req.body;
+  console.log(rate);
+  await fileManipulation.updateRate(id, rate); 
+  res.status(204).send();
+});
+
 module.exports = app;
