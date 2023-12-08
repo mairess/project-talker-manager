@@ -46,6 +46,12 @@ app.get('/talker', async (req, res) => {
   return res.status(200).json([]);
 });
 
+// app.get('/talker/db', async (req, res) => {
+//   const theTalkers = await fileManipulation.getAllTalkers();
+//   if (theTalkers.length) return res.status(200).json(theTalkers);
+//   return res.status(200).json([]);
+// });
+
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   const theTalkers = await fileManipulation.getAllTalkers();
