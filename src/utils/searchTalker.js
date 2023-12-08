@@ -1,22 +1,29 @@
 const byName = async (theTalkers, queryName) => {
-  console.log(queryName);
-  const reults = theTalkers.filter((talker) => talker.name.includes(queryName));
-  if (reults.length === 0) {
+  const results = theTalkers.filter((talker) => talker.name.includes(queryName));
+  if (results.length === 0) {
     return [];
   }
-  return reults;
+  return results;
 };
 
 const byRate = async (theTalkers, queryRate) => {
-  const reults = theTalkers.filter((talker) => talker.talk.rate === Number(queryRate));
-  console.log(queryRate);
-  if (reults.length === 0) {
+  const results = theTalkers.filter((talker) => talker.talk.rate === Number(queryRate));
+  if (results.length === 0) {
     return [];
   }
-  return reults;
+  return results;
+};
+
+const byDate = async (theTalkers, queryDate) => {
+  const results = theTalkers.filter((talker) => talker.talk.watchedAt === queryDate);
+  if (results.length === 0) {
+    return [];
+  }
+  return results;
 };
 
 module.exports = {
   byName,
   byRate,
+  byDate,
 };
