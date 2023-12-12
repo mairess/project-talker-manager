@@ -114,7 +114,6 @@ app.patch('/talker/rate/:id', rateFromBodyValidation, async (req, res, next) => 
   try {
     const { id } = req.params;
     const { rate } = req.body;
-    console.log(rate);
     await fileManipulation.updateRate(id, rate);
     res.status(204).send();
   } catch (error) {
