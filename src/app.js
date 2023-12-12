@@ -42,56 +42,86 @@ app.get('/talker/search',
   notStandardDate,
   onlyDateExisting);
 
-app.get('/talker', async (req, res) => {
-  const theTalkers = await fileManipulation.getAllTalkers();
-  if (theTalkers.length) return res.status(200).json(theTalkers);
-  return res.status(200).json([]);
+app.get('/talker', async (req, res, next) => {
+  try {
+    const theTalkers = await fileManipulation.getAllTalkers();
+    if (theTalkers.length) return res.status(200).json(theTalkers);
+    return res.status(200).json([]);
+  } catch (error) {
+    return next(error);
+  }
 });
 
-app.get('/talker/db', dataBaseValidation, async (req, res) => {
-  const [result] = await talkersDB.allTalkers();
-  return res.status(200).json(result);
+app.get('/talker/db', dataBaseValidation, async (req, res, next) => {
+  try {
+    const [result] = await talkersDB.allTalkers();
+    return res.status(200).json(result);
+  } catch (error) {
+    return next(error);
+  }
 });
 
-app.get('/talker/:id', async (req, res) => {
-  const { id } = req.params;
-  const theTalkers = await fileManipulation.getAllTalkers();
-  const theTalker = theTalkers.find((talker) => talker.id === Number(id));
+app.get('/talker/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const theTalkers = await fileManipulation.getAllTalkers();
+    const theTalker = theTalkers.find((talker) => talker.id === Number(id));
 
-  if (theTalker) return res.status(200).json(theTalker);
-  
-  return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    if (theTalker) return res.status(200).json(theTalker);
+
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  } catch (error) {
+    return next(error);
+  }
 });
 
 app.use(auth);
 
-app.post('/talker', nameValidation, ageValidation, talkValidation, async (req, res) => {
-  const newTalker = req.body;
-  const addedTalker = await fileManipulation.addNewTalker(newTalker);
-  await fileManipulation.getAllTalkers();
+app.post('/talker', nameValidation, ageValidation, talkValidation, async (req, res, next) => {
+  try {
+    const newTalker = req.body;
+    const addedTalker = await fileManipulation.addNewTalker(newTalker);
+    await fileManipulation.getAllTalkers();
 
-  res.status(201).json(addedTalker);
+    res.status(201).json(addedTalker);
+  } catch (error) {
+    return next(error);
+  }
 });
 
 app.put('/talker/:id', nameValidation, ageValidation, talkValidation, talkerValidation,
-  async (req, res) => {
-    const { id } = req.params;
-    const updatedTalker = await fileManipulation.updateTalker(String(id), req.body);
-    res.status(200).json(updatedTalker);
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const updatedTalker = await fileManipulation.updateTalker(String(id), req.body);
+      res.status(200).json(updatedTalker);
+    } catch (error) {
+      return next(error);
+    }
   });
 
-app.delete('/talker/:id', async (req, res) => {
-  const { id } = req.params;
-  await fileManipulation.deleteTalker(Number(id));
-  res.status(204).send();
+app.delete('/talker/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await fileManipulation.deleteTalker(Number(id));
+    res.status(204).send();
+  } catch (error) {
+    return next(error);
+  }
 });
 
-app.patch('/talker/rate/:id', rateFromBodyValidation, async (req, res) => {
-  const { id } = req.params;
-  const { rate } = req.body;
-  console.log(rate);
-  await fileManipulation.updateRate(id, rate); 
-  res.status(204).send();
+app.patch('/talker/rate/:id', rateFromBodyValidation, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { rate } = req.body;
+    console.log(rate);
+    await fileManipulation.updateRate(id, rate);
+    res.status(204).send();
+  } catch (error) {
+    return next(error);
+  }
 });
+
+app.use((error, _req, res, _next) => res.status(500).json({ error: error.message }));
 
 module.exports = app;
