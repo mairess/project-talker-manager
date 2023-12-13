@@ -8,4 +8,4 @@ Este projeto consiste em uma `API REST` `Node.js` com `Express` para cadastro de
 
 - Habilidade em criar `rotas` de uma API utilizando `Express` e `Node.js`.
 - Conhecimento no uso dos verbos HTTP (`PUT`, `POST`, `GET`, `DELETE`, `PATCH`) para manipulação de recursos na API.
-- Experiência sólida em integração e interação com um banco de dados `MySQL`.
+- Integração e interação com um banco de dados `MySQL`.
