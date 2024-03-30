@@ -131,7 +131,7 @@ paths:
   /talker/db:
     get:
       tags:
-        - Talkers
+        - Talker
       summary: Get all talkers from the database
       description: |
         This endpoint retrieves a list of all talkers stored in the database.
