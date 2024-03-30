@@ -1,4 +1,8 @@
 const express = require('express');
+const swaggerUI = require('swagger-ui-express');
+const yaml = require('js-yaml');
+const fs = require('fs');
+const cors = require('cors');
 const talkersDB = require('./db/talkersDB');
 const fileManipulation = require('./utils/fileManipulation');
 const loginRouter = require('./routes/loginRouter');
@@ -24,9 +28,16 @@ const dateAndQAdnDateExisting = require('./middlewares/dateAndQAdnDateExisting')
 const rateFromBodyValidation = require('./middlewares/rateFromBodyValidation');
 const dataBaseValidation = require('./middlewares/dataBaseValidation');
 
+const raw = fs.readFileSync('swagger.yaml');
+const data = yaml.load(raw);
+
 const app = express();
+app.use(cors());
 
 app.use(express.json());
+
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(data));
+
 app.use('/login', loginRouter);
 
 app.get('/talker/search',

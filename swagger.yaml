@@ -1,0 +1,463 @@
+openapi: 3.0.0
+info:
+  title: Talker Manager API
+  description: API for managing talkers
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+  - url: http://localhost:7000
+paths:
+  /login:
+    post:
+      tags:
+      - Login
+      summary: Route to authenticate and obtain access token
+      description: |
+        This endpoint allows users to authenticate and obtain an access token by providing valid credentials.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          description: Successfully generated access token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: 62cx89i5dc1a4edi
+        '400':
+          $ref: '#/components/responses/Invalid login'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "O \"password\" deve ter pelo menos 6 caracteres"
+  /talker/search:
+    get:
+      tags:
+        - Talker
+      summary: Search talkers based on filters
+      description: |
+        This endpoint allows users to search for talkers based on different filters such as name, date of participation, and rating.
+      parameters:
+        - in: query
+          name: q
+          description: Name filter
+          schema:
+            type: string
+        - in: query
+          name: date
+          description: Date of participation filter
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: rate
+          description: Rating filter (1-5)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+      responses:
+        '200':
+          description: talkers found successfully
+          content:
+            application/json:
+              examples:
+                Talkers found:
+                  value:
+                    - id: 1
+                      name: Marcos Costa
+                      age: 33
+                      talk:
+                        watchedAt: 22/10/2020
+                        rate: 5
+                    - id: 2
+                      name: Lara Costa
+                      age: 32
+                      talk:
+                        watchedAt: 23/11/2021
+                        rate: 5
+                No talkers found:
+                  value: []
+  /talker:
+    get:
+      tags:
+        - Talker
+      summary: Get all talkers
+      description: |
+        This endpoint retrieves a list of all registered talkers.
+      responses:
+        '200':
+          description: List of all talkers
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/Talkers'
+    post:
+      security:
+        - ApiKeyAuth: []
+      tags:
+        - Talker
+      summary: Add a new talker
+      description: |
+        This endpoint allows users to add a new talker to the system.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/New talker'
+      responses:
+        '201':
+          description: Talker added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Returned new talker'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /talker/db:
+    get:
+      tags:
+        - Talkers
+      summary: Get all talkers from the database
+      description: |
+        This endpoint retrieves a list of all talkers stored in the database.
+      responses:
+        '200':
+          description: List of all talkers from the database
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/Talkers'
+  /talker/{id}:
+    get:
+      tags:
+      - Talker
+      summary: Get a talker by ID
+      description: |
+        This endpoint retrieves information about a specific talker identified by their ID.
+      parameters:
+        - in: path
+          name: id
+          description: talker ID to be retrieved
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Talker found successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Talker'
+        '404':
+          description: Talker not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    example: "Pessoa palestrante não encontrada"
+    put:
+      security:
+        - ApiKeyAuth: []
+      tags:
+        - Talker
+      summary: Update information of a talker
+      description: |
+        This endpoint allows users to update information about a specific talker.
+      parameters:
+        - in: path
+          name: id
+          description: talker ID to be updated
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TalkerToUpdate'
+      responses:
+        '200':
+          description: talker updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnedNewTalker'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      security:
+        - ApiKeyAuth: []
+      tags:
+        - Talker
+      summary: Delete a talker
+      description: |
+        This endpoint allows users to delete a specific talker from the system.
+      parameters:
+        - in: path
+          name: id
+          description: talker ID to be deleted
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: talker deleted successfully
+  /talker/rate/{id}:
+    patch:
+      security:
+        - ApiKeyAuth: []
+      tags:
+        - Talker
+      summary: Update rating of a talker
+      description: |
+        This endpoint allows users to update the rating of a specific talker.
+      parameters:
+        - in: path
+          name: id
+          description: talker ID to be updated
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rate:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+      responses:
+        '204':
+          description: talker rating updated successfully
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      scheme: bearer
+      in: header
+      name: Authorization
+  schemas:
+    Talkers:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        age:
+          type: integer
+        talk:
+          type: object
+          properties:
+            watchedAt:
+              type: string
+              format: date
+            rate:
+              type: integer
+              minimum: 1
+              maximum: 5
+      example:
+        - id: 1
+          name: Marcos Costa
+          age: 33
+          talk:
+            watchedAt: 22/10/2020
+            rate: 5
+        - id: 2
+          name: Lara Costa
+          age: 32
+          talk:
+            watchedAt: 23/11/2021
+            rate: 5
+    Talker:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        age:
+          type: integer
+        talk:
+          type: object
+          properties:
+            watchedAt:
+              type: string
+              format: date
+            rate:
+              type: integer
+              minimum: 1
+              maximum: 5
+      example:
+        id: 1
+        name: Marcos Costa
+        age: 33
+        talk:
+          watchedAt: 22/10/2020
+          rate: 5
+    New talker:
+      type: object
+      properties:
+        name:
+          type: string
+        age:
+          type: integer
+        talk:
+          type: object
+          properties:
+            watchedAt:
+              type: string
+              format: date
+            rate:
+              type: integer
+              minimum: 1
+              maximum: 5
+      example:
+        name: Antonio Costa
+        age: 20
+        talk:
+          watchedAt: 22/10/2018
+          rate: 1
+    Talker yo update:
+      type: object
+      properties:
+        name:
+          type: string
+        age:
+          type: integer
+        talk:
+          type: object
+          properties:
+            watchedAt:
+              type: string
+              format: date
+            rate:
+              type: integer
+              minimum: 1
+              maximum: 5
+      example:
+        name: Galileu Costa
+        age: 25
+        talk:
+          watchedAt: 22/10/2019
+          rate: 4
+    Returned new talker:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        age:
+          type: integer
+        talk:
+          type: object
+          properties:
+            watchedAt:
+              type: string
+              format: date
+            rate:
+              type: integer
+              minimum: 1
+              maximum: 5
+      example:
+        id: 1
+        name: Galileu Costa
+        age: 25
+        talk:
+          watchedAt: 22/10/2019
+          rate: 4
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          example: yellow@rabbit.com
+        password:
+          type: string
+          example: strong_password
+  responses:
+    BadRequest:
+      description: Requisição inválida.
+      content:
+        application/json:
+          examples:
+            Empty name:
+              value:
+                message: "O campo 'name' é obrigatório"
+            Name min length:
+              value:
+                message: "O 'name' deve ter pelo menos 3 caracteres"
+            Empty age:
+              value:
+                message: "O campo 'age' é obrigatório"
+            Age not integer:
+              value:
+                message: "O campo 'age' deve ser um número inteiro igual ou maior que 18"
+            Empty talk:
+              value:
+                message: "O campo 'talk' é obrigatório"
+            Empty watched at:
+              value:
+                message: "O campo 'watchedAt' é obrigatório"
+            Invalid format watched at:
+              value:
+                message: "O campo 'watchedAt' deve ter o formato 'dd/mm/aaaa'"
+            Empty rate:
+              value:
+                message: "O campo 'rate' é obrigatório"
+            Invalid rate:
+              value:
+                message: "O campo 'rate' deve ser um número inteiro entre 1 e 5"
+    Unauthorized:
+      description: Não autorizado.
+      content:
+        application/json:
+          examples:
+            Token not found:
+              value:
+                message: "Token não encontrado"
+            Invalid token:
+              value:
+                message: "Token inválido"
+    Invalid login:
+      description: Invalid login data
+      content:
+        application/json:
+          examples:
+            Email is required:
+              value:
+                message: "O campo \"email\" é obrigatório"
+            Email invalid format:
+              value:
+                message: "O \"email\" deve ter o formato \"email@email.com\""
+            Password is required:
+              value:
+                message: "O campo \"senha\" é obrigatório"
+            Password min length:
+              value:
+                message: "O \"password\" deve ter pelo menos 6 caracteres"
