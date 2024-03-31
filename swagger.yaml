@@ -43,6 +43,8 @@ paths:
                     example: "O \"password\" deve ter pelo menos 6 caracteres"
   /talker/search:
     get:
+      security:
+        - ApiKeyAuth: []
       tags:
         - Talker
       summary: Search talkers based on filters
@@ -69,7 +71,7 @@ paths:
             maximum: 5
       responses:
         '200':
-          description: talkers found successfully
+          description: Talkers found successfully
           content:
             application/json:
               examples:
@@ -89,6 +91,10 @@ paths:
                         rate: 5
                 No talkers found:
                   value: []
+        '400':
+          $ref: '#/components/responses/Invalid date'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
   /talker:
     get:
       tags:
@@ -184,23 +190,21 @@ paths:
       parameters:
         - in: path
           name: id
-          description: talker ID to be updated
           required: true
-          schema:
-            type: integer
+          description: talker ID to be updated
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TalkerToUpdate'
+              $ref: '#/components/schemas/Talker to update'
       responses:
         '200':
-          description: talker updated successfully
+          description: Talker updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ReturnedNewTalker'
+                $ref: '#/components/schemas/Returned new talker'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -222,7 +226,9 @@ paths:
             type: integer
       responses:
         '204':
-          description: talker deleted successfully
+          description: Talker deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
   /talker/rate/{id}:
     patch:
       security:
@@ -252,7 +258,11 @@ paths:
                   maximum: 5
       responses:
         '204':
-          description: talker rating updated successfully
+          description: Talker rating updated successfully
+        '400':
+          $ref: '#/components/responses/Invalid rate'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -342,7 +352,7 @@ components:
         talk:
           watchedAt: 22/10/2018
           rate: 1
-    Talker yo update:
+    Talker to update:
       type: object
       properties:
         name:
@@ -402,7 +412,7 @@ components:
           example: strong_password
   responses:
     BadRequest:
-      description: Requisição inválida.
+      description: Bad Request
       content:
         application/json:
           examples:
@@ -434,7 +444,7 @@ components:
               value:
                 message: "O campo 'rate' deve ser um número inteiro entre 1 e 5"
     Unauthorized:
-      description: Não autorizado.
+      description: Unauthorized
       content:
         application/json:
           examples:
@@ -461,3 +471,17 @@ components:
             Password min length:
               value:
                 message: "O \"password\" deve ter pelo menos 6 caracteres"
+    Invalid date:
+      description: Bad request
+      content:
+        application/json:
+          example:
+            message: "O campo 'watchedAt' deve ter o formato 'dd/mm/aaaa'"
+    Invalid rate:
+      description: Bad request
+      content:
+        application/json:
+          example:
+            message: "O campo 'rate' deve ser um número inteiro entre 1 e 5"
+            
+
