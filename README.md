@@ -13,22 +13,22 @@ Este projeto consiste em uma `API REST` `Node` com `Express` para cadastro de pa
 > ⚠️ É preciso criar um arquivo `.env` na raiz do projeto, siga o exemplo do arquivo [`env.example`](./env.example).
 >
 
-Clone o repositório:
+1. Clone o repositório:
 
 ```BASH
 git clone git@github.com:mairess/project-talker-manager.git
 ```
 
-Instale as dependências:
+2. Instale as dependências:
 
 ```BASH
 npm install
 ```
 
-Inicie server:
+3. Inicie server:
 
 ```BASH
-env $(cat .env) npm dev
+env $(cat .env) npm run dev
 ```
 
 </details>
@@ -39,35 +39,35 @@ env $(cat .env) npm dev
 
 > ⚠️ É preciso ter o [Docker](https://www.docker.com/get-started/) instalado em sua máquina.
 
-Clone o repositório:
+1. Clone o repositório:
 
 ```BASH
 git clone git@github.com:mairess/project-talker-manager.git
 ```
 
-Suba o container:
+2. Suba os containers:
 
 ```BASH
 docker compose up -d
 ```
 
-Acesse o terminal do container:
+3. Acesse o terminal do container:
 
 ```BASH
 docker exec -it talker_manager bash
 ```
 
-Inicie o server, estará disponível na porta `3001`:
+4. Inicie o server, estará disponível na porta `3001`:
 
 ```HTML
-http://localhost:3001/talker
+npm run dev
 ```
 
 </details>
 
 ## Documentação da API
 
-A documentação desta api está disponível através da rota `/api-docs/`
+A documentação desta api está disponível em `/api-docs`
 
 ## Competências desenvolvidas
 
