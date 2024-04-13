@@ -69,8 +69,11 @@ npm run dev
 
 A documentação desta api está disponível em `/api-docs`
 
-## Competências desenvolvidas
+## Stack utilizadas
 
-- Habilidade em criar `rotas` de uma API utilizando `Express` e `Node.js`.
-- Conhecimento no uso dos verbos HTTP (`PUT`, `POST`, `GET`, `DELETE`, `PATCH`) para manipulação de recursos na API.
-- Integração e interação com um banco de dados `MySQL`.
+- Javascript
+- Node
+- Express
+- MySQL
+- Docker
+- Swagger-ui
