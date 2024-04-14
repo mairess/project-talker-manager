@@ -69,7 +69,7 @@ npm run dev
 
 A documentação desta api está disponível em `/api-docs`
 
-## Stack utilizadas
+## Tecnologias utilizadas
 
 - Javascript
 - Node
